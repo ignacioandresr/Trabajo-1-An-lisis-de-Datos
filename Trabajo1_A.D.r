@@ -63,16 +63,47 @@ if(test_total$p.value > 0.05) {
 
 # Medidas de Tendencia Central
 media_quantity   <- mean(datos$Quantity)
-print(media_quantity)
 mediana_quantity <- median(datos$Quantity)
-print(mediana_quantity)
 
 media_priceperunit   <- mean(datos$Price.Per.Unit)
-print(media_priceperunit)
 mediana_priceperunit <- median(datos$Price.Per.Unit)
-print(mediana_priceperunit)
 
 media_totalspent   <- mean(datos$Total.Spent)
-print(media_totalspent)
 mediana_totalspent <- median(datos$Total.Spent)
-print(mediana_totalspent)
+
+# Medidas de Disperción 
+rango_quantity    <- diff(range(datos$Quantity))
+varianza_quantity <- var(datos$Quantity)
+desv_est_quantity <- sd(datos$Quantity)
+iqr_quantity      <- IQR(datos$Quantity)
+cv_quantity       <- (desv_est_quantity / media_quantity) * 100
+
+rango_priceperunit    <- diff(range(datos$Price.Per.Unit))
+varianza_priceperunit <- var(datos$Price.Per.Unit)
+desv_est_priceperunit <- sd(datos$Price.Per.Unit)
+iqr_priceperunit      <- IQR(datos$Price.Per.Unit)
+cv_priceperunit       <- (desv_est_priceperunit / media_priceperunit) * 100
+
+rango_totalspent    <- diff(range(datos$Total.Spent))
+varianza_totalspent <- var(datos$Total.Spent)
+desv_est_totalspent <- sd(datos$Total.Spent)
+iqr_totalspent      <- IQR(datos$Total.Spent)
+cv_totalspent       <- (desv_est_totalspent / media_totalspent) * 100
+
+# Visualización de Medidas
+print(paste("Media de Cantidad:", round(media_quantity, 2)))
+print(paste("Mediana de Cantidad:", round(mediana_quantity, 2)))
+print(paste("Desviación Estándar de Cantidad:", round(desv_est_quantity, 2)))
+print(paste("Coeficiente de Variación (CV) de Cantidad:", round(cv_quantity, 2), "%"))
+
+print(paste("Media de Precio por Unidad:", round(media_priceperunit, 2)))
+print(paste("Mediana de Precio por Unidad:", round(mediana_priceperunit, 2)))
+print(paste("Desviación Estándar de Precio por Unidad:", round(desv_est_priceperunit, 2)))
+print(paste("Coeficiente de Variación (CV) de Precio por Unidad:", round(cv_priceperunit, 2), "%"))
+
+print(paste("Media de Total de Gasto:", round(media_totalspent, 2)))
+print(paste("Mediana de Total de Gasto:", round(mediana_totalspent, 2)))
+print(paste("Desviación Estándar de Total de Gasto:", round(desv_est_totalspent, 2)))
+print(paste("Coeficiente de Variación (CV) de Total de Gasto:", round(cv_totalspent, 2), "%"))
+
+# Distribuciones Numéricas
