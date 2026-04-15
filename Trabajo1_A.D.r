@@ -17,14 +17,11 @@ unique(datos$Location)
 unique(datos$Transaction.Date)
 
 # Detección outliers
-hist(datos$Quantity, main="Distribución de cantidad de artículos")
-boxplot(datos$Quantity)
+boxplot(datos$Quantity, main="Detección de Outliers (Quantity)")
 
-hist(datos$Total.Spent, main="Distribución de total gastado")
-boxplot(datos$Total.Spent)
+boxplot(datos$Total.Spent, main="Detección de Outliers (Price.Per.Unit)")
 
-hist(datos$Price.Per.Unit, main="Distribución de precios por unidad")
-boxplot(datos$Price.Per.Unit)
+boxplot(datos$Price.Per.Unit, main="Detección de Outliers (Total.Spent)")
 
 # Test Shapiro para imputar nulos
 vector1 <- na.omit(datos$Quantity)
@@ -107,3 +104,21 @@ print(paste("Desviación Estándar de Total de Gasto:", round(desv_est_totalspen
 print(paste("Coeficiente de Variación (CV) de Total de Gasto:", round(cv_totalspent, 2), "%"))
 
 # Distribuciones Numéricas
+# Cantidad total vendida por categoria:
+#library(dplyr)
+#library(ggplot2)
+ventas_por_categoria <- datos %>%
+  group_by(Item) %>%
+  summarise(Total.Spent = sum(Quantity * Price.Per.Unit))
+ggplot(ventas_por_categoria, aes(x = Item, y = Total.Spent, fill = Item)) +
+  # preparamos el grafico, y asignamos esteticas.
+  geom_bar(stat = "identity") + # generamos el grafico de barras.
+  ggtitle("Total de ventas por categoria") + # agregamos el titulo.
+  xlab("Categoria") + # agregamos la etiqueta del eje x.
+  ylab("Ventas totales") # agregamos la etiqueta del eje y.
+
+hist(datos$Quantity, main="Histograma de Quantity")
+
+hist(datos$Total.Spent, main="Histograma de Price.Per.Unit")
+
+hist(datos$Price.Per.Unit, main="Histograma de Total.Spent")
