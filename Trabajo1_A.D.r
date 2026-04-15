@@ -10,13 +10,13 @@ colSums(is.na(datos))
 # Verificación del tipo de dato
 str(datos)
 
-#Verificación inconsistencias
+# Verificación inconsistencias
 unique(datos$Item)
 unique(datos$Payment.Method)
 unique(datos$Location)
 unique(datos$Transaction.Date)
 
-#Detección outliers
+# Detección outliers
 hist(datos$Quantity, main="Distribución de cantidad de artículos")
 boxplot(datos$Quantity)
 
@@ -26,21 +26,23 @@ boxplot(datos$Total.Spent)
 hist(datos$Price.Per.Unit, main="Distribución de precios por unidad")
 boxplot(datos$Price.Per.Unit)
 
-#Test Shapiro para imputar nulos
+# Test Shapiro para imputar nulos
 vector1 <- na.omit(datos$Quantity)
 muestra1 <- sample(vector1, 5000)
 test_cantidad <- shapiro.test(muestra1)
+print(test_cantidad)
 
 vector2 <- na.omit(datos$Price.Per.Unit)
 muestra2 <- sample(vector2, 5000)
 test_precio <- shapiro.test(muestra2)
+print(test_precio)
 
 vector3 <- na.omit(datos$Total.Spent)
 muestra3 <- sample(vector3, 5000)
 test_total <- shapiro.test(muestra3)
+print(test_total)
 
-#Decision Media o Mediana, Imputar nulos
-
+# Decisión Media o Mediana e Imputar nulos
 if(test_cantidad$p.value > 0.05) {
   datos$Quantity[is.na(datos$Quantity)] <- mean(datos$Quantity, na.rm = TRUE)
 } else {
@@ -58,4 +60,4 @@ if(test_total$p.value > 0.05) {
 } else {
   datos$Total.Spent[is.na(datos$Total.Spent)] <- median(datos$Total.Spent, na.rm = TRUE)
 }
-print(test_cantidad)
+
