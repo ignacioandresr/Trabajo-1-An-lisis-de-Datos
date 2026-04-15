@@ -61,3 +61,18 @@ if(test_total$p.value > 0.05) {
   datos$Total.Spent[is.na(datos$Total.Spent)] <- median(datos$Total.Spent, na.rm = TRUE)
 }
 
+# Medidas de Tendencia Central
+media_quantity   <- mean(datos$Quantity)
+print(media_quantity)
+mediana_quantity <- median(datos$Quantity)
+print(mediana_quantity)
+
+media_priceperunit   <- mean(datos$Price.Per.Unit)
+print(media_priceperunit)
+mediana_priceperunit <- median(datos$Price.Per.Unit)
+print(mediana_priceperunit)
+
+media_totalspent   <- mean(datos$Total.Spent)
+print(media_totalspent)
+mediana_totalspent <- median(datos$Total.Spent)
+print(mediana_totalspent)
