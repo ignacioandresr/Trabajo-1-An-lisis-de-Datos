@@ -103,7 +103,7 @@ print(paste("Mediana de Total de Gasto:", round(mediana_totalspent, 2)))
 print(paste("Desviación Estándar de Total de Gasto:", round(desv_est_totalspent, 2)))
 print(paste("Coeficiente de Variación (CV) de Total de Gasto:", round(cv_totalspent, 2), "%"))
 
-# Distribuciones Numéricas
+# Distribuciones Numéricas (Histogramas)
 # Cantidad total vendida por categoria:
 #library(dplyr)
 #library(ggplot2)
