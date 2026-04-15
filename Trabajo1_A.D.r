@@ -117,6 +117,21 @@ ggplot(ventas_por_categoria, aes(x = Item, y = Total.Spent, fill = Item)) +
   xlab("Categoria") + # agregamos la etiqueta del eje x.
   ylab("Ventas totales") # agregamos la etiqueta del eje y.
 
+# Grafico de Lineas, ventas por fecha.
+ventas_por_fecha <- datos %>% 
+  group_by(Transaction.Date) %>% 
+  
+  summarise(total_ventas = sum(Quantity))
+ventas_por_fecha
+
+ggplot(ventas_por_fecha, aes(x = Transaction.Date, y = total_ventas, group = 1)) +
+  # Agregamos 'group = 1' para indicar que todos los puntos pertenecen al mismo grupo
+  geom_line() + # agregamos las lineas al grafico.
+  geom_point() +# agregamos los puntos al grafico.
+  ggtitle("Ventas a lo largo del tiempo") +
+  xlab("Fecha") + # agregamos la etiqueta del eje x.
+  ylab("Ventas totales") # agregamos la etiqueta del eje y.
+
 hist(datos$Quantity, main="Histograma de Quantity")
 
 hist(datos$Total.Spent, main="Histograma de Price.Per.Unit")
