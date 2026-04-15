@@ -11,30 +11,51 @@ colSums(is.na(datos))
 str(datos)
 
 #Verificación inconsistencias
-unique(cafe$Item)
-unique(cafe$Payment.Method)
-unique(cafe$Location)
-unique(cafe$Transaction.Date)
+unique(datos$Item)
+unique(datos$Payment.Method)
+unique(datos$Location)
+unique(datos$Transaction.Date)
 
 #Detección outliers
-hist(cafe$Price.Per.Unit, main="Distribución de cantidad de artículos")
-boxplot(cafe$Quantity)
+hist(datos$Quantity, main="Distribución de cantidad de artículos")
+boxplot(datos$Quantity)
 
-hist(cafe$Price.Per.Unit, main="Distribución de total gastado")
-boxplot(cafe$Total.Spent)
+hist(datos$Total.Spent, main="Distribución de total gastado")
+boxplot(datos$Total.Spent)
 
-hist(cafe$Price.Per.Unit, main="Distribución de precios por unidad")
-boxplot(cafe$Price.Per.Unit)
+hist(datos$Price.Per.Unit, main="Distribución de precios por unidad")
+boxplot(datos$Price.Per.Unit)
 
 #Test Shapiro para imputar nulos
-vector1 <- na.omit(cafe$Quantity)
+vector1 <- na.omit(datos$Quantity)
 muestra1 <- sample(vector1, 5000)
-shapiro.test(muestra1)
+test_cantidad <- shapiro.test(muestra1)
 
-vector2 <- na.omit(cafe$Price.Per.Unit)
+vector2 <- na.omit(datos$Price.Per.Unit)
 muestra2 <- sample(vector2, 5000)
-shapiro.test(muestra2)
+test_precio <- shapiro.test(muestra2)
 
-vector3 <- na.omit(cafe$Total.Spent)
+vector3 <- na.omit(datos$Total.Spent)
 muestra3 <- sample(vector3, 5000)
-shapiro.test(muestra3)
+test_total <- shapiro.test(muestra3)
+
+#Decision Media o Mediana, Imputar nulos
+
+if(test_cantidad$p.value > 0.05) {
+  datos$Quantity[is.na(datos$Quantity)] <- mean(datos$Quantity, na.rm = TRUE)
+} else {
+  datos$Quantity[is.na(datos$Quantity)] <- median(datos$Quantity, na.rm = TRUE)
+}
+
+if(test_precio$p.value > 0.05) {
+  datos$Price.Per.Unit[is.na(datos$Price.Per.Unit)] <- mean(datos$Price.Per.Unit, na.rm = TRUE)
+} else {
+  datos$Price.Per.Unit[is.na(datos$Price.Per.Unit)] <- median(datos$Price.Per.Unit, na.rm = TRUE)
+}
+
+if(test_total$p.value > 0.05) {
+  datos$Total.Spent[is.na(datos$Total.Spent)] <- mean(datos$Total.Spent, na.rm = TRUE)
+} else {
+  datos$Total.Spent[is.na(datos$Total.Spent)] <- median(datos$Total.Spent, na.rm = TRUE)
+}
+print(test_cantidad)
