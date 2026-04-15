@@ -68,7 +68,7 @@ mediana_priceperunit <- median(datos$Price.Per.Unit)
 media_totalspent   <- mean(datos$Total.Spent)
 mediana_totalspent <- median(datos$Total.Spent)
 
-# Medidas de Disperción 
+# Medidas de Dispersión 
 rango_quantity    <- diff(range(datos$Quantity))
 varianza_quantity <- var(datos$Quantity)
 desv_est_quantity <- sd(datos$Quantity)
@@ -105,8 +105,8 @@ print(paste("Coeficiente de Variación (CV) de Total de Gasto:", round(cv_totals
 
 # Distribuciones Numéricas (Histogramas)
 # Cantidad total vendida por categoria:
-#library(dplyr)
-#library(ggplot2)
+library(dplyr)
+library(ggplot2)
 ventas_por_categoria <- datos %>%
   group_by(Item) %>%
   summarise(Total.Spent = sum(Quantity * Price.Per.Unit))
@@ -115,12 +115,11 @@ ggplot(ventas_por_categoria, aes(x = Item, y = Total.Spent, fill = Item)) +
   geom_bar(stat = "identity") + # generamos el grafico de barras.
   ggtitle("Total de ventas por categoria") + # agregamos el titulo.
   xlab("Categoria") + # agregamos la etiqueta del eje x.
-  ylab("Ventas totales") # agregamos la etiqueta del eje y.
+  ylab("Ventas totales (Ingresos)") # agregamos la etiqueta del eje y.
 
 # Grafico de Lineas, ventas por fecha.
 ventas_por_fecha <- datos %>% 
   group_by(Transaction.Date) %>% 
-  
   summarise(total_ventas = sum(Quantity))
 ventas_por_fecha
 
@@ -134,6 +133,27 @@ ggplot(ventas_por_fecha, aes(x = Transaction.Date, y = total_ventas, group = 1))
 
 hist(datos$Quantity, main="Histograma de Quantity")
 
-hist(datos$Total.Spent, main="Histograma de Price.Per.Unit")
+hist(datos$Price.Per.Unit, main="Histograma de Price.Per.Unit")
 
-hist(datos$Price.Per.Unit, main="Histograma de Total.Spent")
+hist(datos$Total.Spent, main="Histograma de Total.Spent")
+
+# Medidas de forma (Asimetría y Curtosis)
+library(moments)
+asimetria_quantity <- skewness(datos$Quantity)
+curtosis_quantity <- kurtosis(datos$Quantity)
+
+asimetria_ppu <- skewness(datos$Price.Per.Unit)
+curtosis_ppu <- kurtosis(datos$Price.Per.Unit)
+
+asimetria_totalSpent <- skewness(datos$Total.Spent)
+curtosis_totalSpent <- kurtosis(datos$Total.Spent)
+
+print(paste("Asimetría Cantidad de Ventas:", round(asimetria_quantity, 2)))
+print(paste("Curtosis Cantidad de Ventas:", round(curtosis_quantity, 2)))
+
+print(paste("Asimetría Precio por unidad:", round(asimetria_ppu, 2)))
+print(paste("Curtosis Precio por unidad:", round(curtosis_ppu, 2)))
+
+print(paste("Asimetría Total Gastado:", round(asimetria_totalSpent, 2)))
+print(paste("Curtosis Total Gastado:", round(curtosis_totalSpent, 2)))
+
