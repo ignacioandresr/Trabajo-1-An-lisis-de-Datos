@@ -103,7 +103,7 @@ print(paste("Mediana de Total de Gasto:", round(mediana_totalspent, 2)))
 print(paste("Desviación Estándar de Total de Gasto:", round(desv_est_totalspent, 2)))
 print(paste("Coeficiente de Variación (CV) de Total de Gasto:", round(cv_totalspent, 2), "%"))
 
-# Distribuciones Numéricas (Histogramas)
+# Distribuciones Numéricas
 # Cantidad total vendida por categoria:
 library(dplyr)
 library(ggplot2)
@@ -117,20 +117,43 @@ ggplot(ventas_por_categoria, aes(x = Item, y = Total.Spent, fill = Item)) +
   xlab("Categoria") + # agregamos la etiqueta del eje x.
   ylab("Ventas totales (Ingresos)") # agregamos la etiqueta del eje y.
 
-# Grafico de Lineas, ventas por fecha.
+# Gráfico de Torta de ventas por categoria:
+ventas_por_categoria <- datos %>%
+  group_by(Item) %>% 
+  summarise(Total.Spent = sum(Quantity))
+
+ventas_por_categoria <- ventas_por_categoria %>%
+  mutate(
+    porcentaje = Total.Spent / sum(Total.Spent),
+    etiqueta = scales::percent(porcentaje)
+  )
+
+ggplot(ventas_por_categoria, aes(x = "", y = Total.Spent, fill = Item)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = etiqueta), 
+            position = position_stack(vjust = 0.5)) +
+  ggtitle("Proporción de Ventas por Categoria") +
+  theme_void() 
+
+# Gráfico de Lineas, ventas por fecha.
+datos$Transaction.Date <- as.Date(datos$Transaction.Date)
+
 ventas_por_fecha <- datos %>% 
   group_by(Transaction.Date) %>% 
-  summarise(total_ventas = sum(Quantity))
-ventas_por_fecha
+  summarise(Total.Spent = sum(Quantity))
 
-ggplot(ventas_por_fecha, aes(x = Transaction.Date, y = total_ventas, group = 1)) +
-  # Agregamos 'group = 1' para indicar que todos los puntos pertenecen al mismo grupo
-  geom_line() + # agregamos las lineas al grafico.
-  geom_point() +# agregamos los puntos al grafico.
+ventas_por_fecha <- ventas_por_fecha %>% 
+  filter(!is.na(Transaction.Date), !is.na(Total.Spent))
+
+ggplot(ventas_por_fecha, aes(x = Transaction.Date, y = Total.Spent, group = 1)) +
+  geom_line() +
+  geom_point() +
   ggtitle("Ventas a lo largo del tiempo") +
-  xlab("Fecha") + # agregamos la etiqueta del eje x.
-  ylab("Ventas totales") # agregamos la etiqueta del eje y.
+  xlab("Fecha") + 
+  ylab("Ventas totales")
 
+# Histogramas
 hist(datos$Quantity, main="Histograma de Quantity")
 
 hist(datos$Price.Per.Unit, main="Histograma de Price.Per.Unit")
