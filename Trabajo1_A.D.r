@@ -117,24 +117,35 @@ ggplot(ventas_por_categoria, aes(x = Item, y = Total.Spent, fill = Item)) +
   xlab("Categoria") + # agregamos la etiqueta del eje x.
   ylab("Ventas totales (Ingresos)") # agregamos la etiqueta del eje y.
 
-# Gráfico de Torta de ventas por categoria:
-ventas_por_categoria <- datos %>%
-  group_by(Item) %>% 
-  summarise(Total.Spent = sum(Quantity))
+# Gráfico de Torta de Proporción de transacciones por método de pago 
+#(NULOS FILTRADOS):
+cantidad_por_metodo <- datos %>%
+  filter(!is.na(Payment.Method)) %>%
+  group_by(Payment.Method) %>% 
+  summarise(cantidad = n())
 
-ventas_por_categoria <- ventas_por_categoria %>%
+cantidad_por_metodo <- cantidad_por_metodo %>%
   mutate(
-    porcentaje = Total.Spent / sum(Total.Spent),
+    porcentaje = cantidad / sum(cantidad),
     etiqueta = scales::percent(porcentaje)
   )
 
-ggplot(ventas_por_categoria, aes(x = "", y = Total.Spent, fill = Item)) +
+ggplot(cantidad_por_metodo, aes(x = "", y = cantidad, fill = Payment.Method)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
   geom_text(aes(label = etiqueta), 
             position = position_stack(vjust = 0.5)) +
-  ggtitle("Proporción de Ventas por Categoria") +
+  ggtitle("Proporción de transacciones por método de pago") +
   theme_void() 
+# Gráfico de dispersión Quantity y Total.Spent
+
+ggplot(datos, aes(x = Quantity, y = Total.Spent)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Relación entre Cantidad de transacciones y Total Gastado",
+       x = "Cantidad",
+       y = "Total Gastado") +
+  theme_minimal()
 
 # Gráfico de Lineas, ventas por fecha.
 datos$Transaction.Date <- as.Date(datos$Transaction.Date)
