@@ -137,6 +137,7 @@ ggplot(cantidad_por_metodo, aes(x = "", y = cantidad, fill = Payment.Method)) +
             position = position_stack(vjust = 0.5)) +
   ggtitle("Proporción de transacciones por método de pago") +
   theme_void() 
+
 # Gráfico de dispersión Quantity y Total.Spent
 
 ggplot(datos, aes(x = Quantity, y = Total.Spent)) +
